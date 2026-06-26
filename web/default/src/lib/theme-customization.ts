@@ -120,7 +120,7 @@ export const DEFAULT_THEME_CUSTOMIZATION: ThemeCustomization = {
   font: 'sans',
   radius: 'xl',
   scale: 'default',
-  contentLayout: 'centered',
+  contentLayout: 'full',
 }
 
 export const THEME_PRESET_VALUES = new Set(
