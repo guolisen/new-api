@@ -57,7 +57,7 @@ function EmptyAboutState() {
         </div>
         <div className='space-y-4 text-sm'>
           <p>
-            {t('New API Project Repository:')}{' '}
+            {t('Original project repository:')}{' '}
             <a
               href='https://github.com/QuantumNous/new-api'
               target='_blank'
@@ -74,9 +74,9 @@ function EmptyAboutState() {
               rel='noopener noreferrer'
               className='text-primary hover:underline'
             >
-              {t('NewAPI')}
+              {t('aiPaths')}
             </a>{' '}
-            © {currentYear}{' '}
+            &copy; {currentYear}{' '}
             <a
               href='https://github.com/QuantumNous'
               target='_blank'
@@ -94,7 +94,7 @@ function EmptyAboutState() {
             >
               {t('One API')}
             </a>{' '}
-            © 2023{' '}
+            &copy; 2023{' '}
             <a
               href='https://github.com/songquanpeng'
               target='_blank'

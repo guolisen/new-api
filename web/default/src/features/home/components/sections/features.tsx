@@ -193,19 +193,19 @@ export function Features(_props: FeaturesProps) {
         </AnimateInView>
 
         {/* Bento grid */}
-        <div className='border-border/40 bg-border/40 grid gap-px overflow-hidden rounded-xl border md:grid-cols-3'>
+        <div className='border-border/70 bg-border/40 grid gap-px overflow-hidden rounded-[28px] border-2 md:grid-cols-3'>
           {features.map((f, i) => (
             <AnimateInView
               key={f.id}
               delay={i * 100}
               animation='scale-in'
-              className={`bg-background group hover:bg-muted/20 p-7 transition-colors duration-300 md:p-8 ${f.span}`}
+              className={`bg-card group hover:bg-[color:rgba(255,255,255,0.35)] p-7 transition-colors duration-300 md:p-8 ${f.span}`}
             >
               <div className='mb-3 flex items-center gap-3'>
-                <span className='border-border/40 bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-md border text-[10px] font-semibold tabular-nums'>
+                <span className='border-border/60 bg-background text-muted-foreground flex size-8 items-center justify-center rounded-[16px] border-2 text-[10px] font-bold tabular-nums'>
                   {f.num}
                 </span>
-                <h3 className='text-sm font-semibold'>{f.title}</h3>
+                <h3 className='text-sm font-extrabold tracking-[0.02em]'>{f.title}</h3>
               </div>
               <p className='text-muted-foreground text-sm leading-relaxed'>
                 {f.desc}

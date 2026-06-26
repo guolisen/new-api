@@ -47,6 +47,11 @@ export default defineConfig(({ envMode }) => {
           semiUiDir,
           'dist/css/semi.css',
         ),
+        // Semi UI still depends on date-fns v2 style deep imports through
+        // date-fns-tz. Force classic to resolve all date-fns requests against
+        // its own v2 installation instead of the workspace-hoisted v4 copy
+        // required by web/default.
+        'date-fns': path.resolve(__dirname, './node_modules/date-fns'),
       },
     },
     html: {

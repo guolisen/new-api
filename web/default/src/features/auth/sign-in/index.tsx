@@ -31,8 +31,11 @@ export function SignIn() {
   return (
     <AuthLayout>
       <div className='w-full space-y-8'>
-        <div className='space-y-2'>
-          <h2 className='text-center text-2xl font-semibold tracking-tight sm:text-left'>
+        <div className='space-y-3'>
+          <div className='inline-flex items-center rounded-full border border-[color:rgba(25,200,185,0.18)] bg-[color:rgba(25,200,185,0.08)] px-3 py-1 text-[11px] font-bold tracking-[0.12em] uppercase text-[color:var(--primary)]'>
+            ai-paths access
+          </div>
+          <h2 className='text-center text-3xl font-extrabold tracking-[0.02em] sm:text-left'>
             {t('Sign in')}
           </h2>
           {!status?.self_use_mode_enabled &&

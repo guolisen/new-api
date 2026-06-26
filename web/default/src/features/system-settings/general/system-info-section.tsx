@@ -164,7 +164,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
                       items={[
                         {
                           value: 'default',
-                          label: t('Default (New Frontend)'),
+                          label: t('Default'),
                         },
                         {
                           value: 'classic',
@@ -182,7 +182,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
                       <SelectContent alignItemWithTrigger={false}>
                         <SelectGroup>
                           <SelectItem value='default'>
-                            {t('Default (New Frontend)')}
+                            {t('Default')}
                           </SelectItem>
                           <SelectItem value='classic'>
                             {t('Classic (Legacy Frontend)')}
@@ -207,7 +207,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
                   <FormItem>
                     <FormLabel>{t('System Name')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('New API')} {...field} />
+                      <Input placeholder={t('ai-paths')} {...field} />
                     </FormControl>
                     <FormDescription>
                       {t('The name displayed across the application')}
@@ -313,7 +313,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
                       <FormLabel>{t('Home Page Content')}</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder={t('Welcome to our New API...')}
+                          placeholder={t('Welcome to ai-paths...')}
                           rows={6}
                           {...field}
                         />

@@ -30,30 +30,34 @@ export function AuthLayout({ children }: AuthLayoutProps) {
   const { systemName, logo, loading } = useSystemConfig()
 
   return (
-    <div className='relative grid h-svh max-w-none'>
+    <div className='relative grid min-h-svh max-w-none overflow-hidden bg-transparent'>
+      <div
+        aria-hidden
+        className='pointer-events-none absolute inset-0'
+        style={{
+          background:
+            'radial-gradient(circle at 12% 12%, rgba(255,255,255,0.7), transparent 24%), radial-gradient(circle at 88% 10%, rgba(130,213,187,0.28), transparent 24%), radial-gradient(circle at 50% 100%, rgba(247,205,103,0.2), transparent 22%)',
+        }}
+      />
       <Link
         to='/'
-        className='absolute top-4 left-4 z-10 flex items-center gap-2 transition-opacity hover:opacity-80 sm:top-8 sm:left-8'
+        className='absolute top-5 left-5 z-10 flex items-center gap-3 rounded-full bg-white/60 px-3 py-2 shadow-[0_6px_18px_rgba(121,79,39,0.08)] backdrop-blur-sm transition-opacity hover:opacity-80 sm:top-8 sm:left-8'
       >
         <div className='relative h-8 w-8'>
           {loading ? (
             <Skeleton className='absolute inset-0 rounded-full' />
           ) : (
-            <img
-              src={logo}
-              alt={t('Logo')}
-              className='h-8 w-8 rounded-full object-cover'
-            />
+            <img src={logo} alt={t('Logo')} className='h-8 w-8 rounded-xl object-cover' />
           )}
         </div>
         {loading ? (
           <Skeleton className='h-6 w-24' />
         ) : (
-          <h1 className='text-xl font-medium'>{systemName}</h1>
+          <h1 className='text-xl font-extrabold tracking-[0.02em]'>{systemName}</h1>
         )}
       </Link>
-      <div className='container flex items-center pt-16 sm:pt-0'>
-        <div className='mx-auto flex w-full flex-col justify-center space-y-2 px-4 py-8 sm:w-[480px] sm:p-8'>
+      <div className='container relative z-10 flex items-center justify-center px-4 py-24 sm:py-12'>
+        <div className='bg-card/92 ring-border/75 mx-auto flex w-full max-w-[520px] flex-col justify-center space-y-2 rounded-[32px] border-2 border-transparent px-5 py-8 shadow-[0_24px_60px_rgba(121,79,39,0.12)] backdrop-blur-md sm:p-10'>
           {children}
         </div>
       </div>

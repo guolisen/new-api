@@ -49,7 +49,7 @@ export function CTA(props: CTAProps) {
       />
 
       <AnimateInView
-        className='mx-auto max-w-2xl text-center'
+        className='border-border/70 bg-card/90 mx-auto max-w-3xl rounded-[32px] border-2 px-8 py-12 text-center shadow-[0_22px_50px_rgba(121,79,39,0.1)] backdrop-blur-md md:px-12'
         animation='scale-in'
       >
         <h2 className='text-2xl leading-tight font-bold tracking-tight md:text-4xl'>

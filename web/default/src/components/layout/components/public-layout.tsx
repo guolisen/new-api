@@ -35,6 +35,14 @@ type PublicLayoutProps = {
 export function PublicLayout(props: PublicLayoutProps) {
   return (
     <div className='bg-background text-foreground relative min-h-svh overflow-x-clip'>
+      <div
+        aria-hidden
+        className='pointer-events-none absolute inset-0 opacity-70'
+        style={{
+          background:
+            'radial-gradient(circle at 0% 0%, rgba(255,255,255,0.75), transparent 24%), radial-gradient(circle at 100% 0%, rgba(130,213,187,0.24), transparent 28%), radial-gradient(circle at 50% 100%, rgba(247,205,103,0.18), transparent 22%)',
+        }}
+      />
       <PublicHeader
         navContent={props.navContent}
         navLinks={props.navLinks}
@@ -47,7 +55,7 @@ export function PublicLayout(props: PublicLayoutProps) {
       />
 
       {props.showMainContainer !== false ? (
-        <main className='container px-4 py-6 pt-20 md:px-4'>
+        <main className='container relative z-10 px-4 py-6 pt-24 md:px-4'>
           {props.children}
         </main>
       ) : (

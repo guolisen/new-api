@@ -177,15 +177,15 @@ export function PublicHeader(props: PublicHeaderProps) {
         <div
           className={cn(
             'pointer-events-auto mx-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
-            scrolled ? 'max-w-[52rem] px-3 pt-3' : 'max-w-7xl px-4 pt-0 md:px-6'
+            scrolled ? 'max-w-[60rem] px-3 pt-3' : 'max-w-7xl px-4 pt-4 md:px-6'
           )}
         >
           <nav
             className={cn(
               'flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
               scrolled
-                ? 'bg-background/60 ring-border/50 h-12 rounded-2xl pr-1.5 pl-4 shadow-[0_2px_16px_-6px_rgba(0,0,0,0.08),0_0_0_0.5px_rgba(0,0,0,0.02)] ring-[0.5px] backdrop-blur-2xl dark:shadow-[0_2px_16px_-6px_rgba(0,0,0,0.4)]'
-                : 'h-16 px-2'
+                ? 'bg-background/88 ring-border/70 h-14 rounded-[28px] border-2 border-transparent pr-2 pl-4 shadow-[0_10px_24px_rgba(121,79,39,0.08)] ring-[1px] backdrop-blur-2xl dark:shadow-[0_12px_28px_rgba(0,0,0,0.35)]'
+                : 'bg-background/62 h-16 rounded-[32px] border-2 border-transparent px-3 shadow-[0_12px_28px_rgba(121,79,39,0.06)] backdrop-blur-xl'
             )}
           >
             {/* Logo */}
@@ -207,7 +207,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                   />
                 )}
               </div>
-              <span className='text-sm font-semibold tracking-tight'>
+              <span className='text-sm font-extrabold tracking-[0.02em]'>
                 {loading ? <Skeleton className='h-4 w-16' /> : displaySiteName}
               </span>
             </Link>
@@ -227,7 +227,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                       tabIndex={link.disabled ? -1 : undefined}
                       onClick={(event) => handleNavLinkClick(event, link)}
                       className={cn(
-                        'text-muted-foreground hover:text-foreground rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors duration-200',
+                        'text-muted-foreground hover:text-foreground rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors duration-200',
                         link.disabled && 'pointer-events-none opacity-50'
                       )}
                     >
@@ -242,7 +242,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                     disabled={link.disabled}
                     onClick={(event) => handleNavLinkClick(event, link)}
                     className={cn(
-                      'rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors duration-200',
+                      'rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors duration-200',
                       isActive
                         ? 'text-foreground'
                         : 'text-muted-foreground hover:text-foreground',
@@ -285,7 +285,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                   ) : (
                     <Button
                       size='sm'
-                      className='h-8 rounded-lg px-3.5 text-xs font-medium'
+                      className='h-9 rounded-[18px] px-4 text-xs font-semibold'
                       render={<Link to='/sign-in' />}
                     >
                       {t('Sign in')}
@@ -404,7 +404,7 @@ export function PublicHeader(props: PublicHeaderProps) {
               <Link
                 to={isAuthenticated ? '/dashboard' : '/sign-in'}
                 onClick={() => setMobileOpen(false)}
-                className='bg-foreground text-background inline-flex h-10 items-center justify-center rounded-lg text-sm font-medium transition-opacity hover:opacity-90 active:opacity-80'
+                className='bg-foreground text-background inline-flex h-11 items-center justify-center rounded-[18px] text-sm font-semibold transition-opacity hover:opacity-90 active:opacity-80'
               >
                 {isAuthenticated ? t('Go to Dashboard') : t('Sign in')}
               </Link>
@@ -435,7 +435,7 @@ export function PublicHeader(props: PublicHeaderProps) {
           </>
         }
       >
-        <div className='bg-muted/40 text-muted-foreground rounded-lg px-3 py-2 text-sm'>
+        <div className='bg-muted/40 text-muted-foreground rounded-[18px] px-3 py-2 text-sm'>
           {t('Redirecting to sign in in {{seconds}} seconds.', {
             seconds: authPromptSecondsLeft,
           })}

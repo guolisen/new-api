@@ -19,7 +19,7 @@ For commercial licensing, please contact support@quantumnous.com
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: 'Public Sans', sans-serif;
+  --font-sans: 'Nunito Sans Variable', 'Nunito Sans', 'Noto Sans SC', sans-serif;
   /* Editorial serif token — the body face used by the `serif` font axis
    * and by presets that opt in (currently Anthropic). Lora carries only
    * Latin glyphs, so the stack walks through CJK serifs (Noto / Source Han
@@ -33,12 +33,8 @@ For commercial licensing, please contact support@quantumnous.com
     'Songti SC', 'STSong', 'STSongti-SC-Regular', 'PingFang SC', 'SimSun',
     'NSimSun', '宋体', 'FangSong', '仿宋', 'KaiTi', '楷体', Georgia,
     'Times New Roman', Cambria, 'Liberation Serif', serif;
-  --font-inter:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-manrope:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-inter: 'Nunito Sans Variable', 'Nunito Sans', 'Noto Sans SC', sans-serif;
+  --font-manrope: 'Nunito Sans Variable', 'Nunito Sans', 'Noto Sans SC', sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -91,8 +87,8 @@ For commercial licensing, please contact support@quantumnous.com
 }
 
 :root {
-  --radius: 1rem;
-  --app-header-height: 3rem;
+  --radius: 1.15rem;
+  --app-header-height: 4.5rem;
   /* Static build-channel fallback consumed when JS hasn't booted yet. */
   --app-rev: '2k6e8r7p';
   /* Currently active body font. The font axis swaps this between
@@ -100,48 +96,48 @@ For commercial licensing, please contact support@quantumnous.com
    * in theme-presets.css. Default mirrors `--font-sans` so behavior is
    * identical when no font preference is set. */
   --font-body: var(--font-sans);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.13 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.95 0 0);
-  --secondary-foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.49 0 0);
-  --accent: oklch(0.95 0 0);
-  --accent-foreground: oklch(0.145 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --success: oklch(0.596 0.145 163.225);
-  --success-foreground: oklch(0.985 0 0);
-  --warning: oklch(0.681 0.162 75.834);
-  --warning-foreground: oklch(0.145 0 0);
-  --info: oklch(0.588 0.158 241.966);
-  --info-foreground: oklch(0.985 0 0);
-  --neutral: oklch(0.708 0 0);
-  --neutral-foreground: oklch(0.145 0 0);
-  --border: oklch(0.93 0 0);
-  --input: oklch(0.93 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.975 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.13 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.92 0 0);
-  --sidebar-accent-foreground: oklch(0.145 0 0);
-  --sidebar-border: oklch(0.93 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --skeleton-base: oklch(0.97 0 0);
-  --skeleton-highlight: oklch(0.985 0 0);
+  --background: #f8f8f0;
+  --foreground: #794f27;
+  --card: rgb(247 243 223);
+  --card-foreground: #725d42;
+  --popover: rgb(247 243 223);
+  --popover-foreground: #725d42;
+  --primary: #19c8b9;
+  --primary-foreground: #794f27;
+  --secondary: #e6f9f6;
+  --secondary-foreground: #725d42;
+  --muted: #f3ecd9;
+  --muted-foreground: #8a7b66;
+  --accent: #ffefb2;
+  --accent-foreground: #725d42;
+  --destructive: #e05a5a;
+  --destructive-foreground: #fff9e3;
+  --success: #6fba2c;
+  --success-foreground: #fff9e3;
+  --warning: #f5c31c;
+  --warning-foreground: #725d42;
+  --info: #889df0;
+  --info-foreground: #fff9e3;
+  --neutral: #c4b89e;
+  --neutral-foreground: #725d42;
+  --border: #c4b89e;
+  --input: #d9cfbb;
+  --ring: #ffcc00;
+  --chart-1: #19c8b9;
+  --chart-2: #889df0;
+  --chart-3: #f8a6b2;
+  --chart-4: #f7cd67;
+  --chart-5: #8ac68a;
+  --sidebar: #f5ebcf;
+  --sidebar-foreground: #794f27;
+  --sidebar-primary: #19c8b9;
+  --sidebar-primary-foreground: #794f27;
+  --sidebar-accent: #fff6d7;
+  --sidebar-accent-foreground: #725d42;
+  --sidebar-border: #d3c7ae;
+  --sidebar-ring: #ffcc00;
+  --skeleton-base: #ece3cc;
+  --skeleton-highlight: #fff8e5;
   --table-row: var(--background);
   --table-header: color-mix(
     in oklch,
@@ -171,49 +167,48 @@ For commercial licensing, please contact support@quantumnous.com
 }
 
 .dark {
-  /* OpenAI-like dark mode with a crisp charcoal canvas. */
-  --background: oklch(0.235 0 0);
-  --foreground: oklch(0.965 0 0);
-  --card: oklch(0.285 0 0);
-  --card-foreground: oklch(0.965 0 0);
-  --popover: oklch(0.305 0 0);
-  --popover-foreground: oklch(0.965 0 0);
-  --primary: oklch(0.965 0 0);
-  --primary-foreground: oklch(0.155 0 0);
-  --secondary: oklch(0.335 0 0);
-  --secondary-foreground: oklch(0.965 0 0);
-  --muted: oklch(0.305 0 0);
-  --muted-foreground: oklch(0.78 0 0);
-  --accent: oklch(0.365 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --success: oklch(0.696 0.17 162.48);
-  --success-foreground: oklch(0.145 0 0);
-  --warning: oklch(0.769 0.188 70.08);
-  --warning-foreground: oklch(0.145 0 0);
-  --info: oklch(0.68 0.17 237.323);
-  --info-foreground: oklch(0.145 0 0);
-  --neutral: oklch(0.76 0 0);
-  --neutral-foreground: oklch(0.155 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 17%);
-  --ring: oklch(0.68 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.225 0 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.965 0 0);
-  --sidebar-primary-foreground: oklch(0.155 0 0);
-  --sidebar-accent: oklch(0.355 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 11%);
-  --sidebar-ring: oklch(0.68 0 0);
-  --skeleton-base: oklch(0.335 0 0);
-  --skeleton-highlight: oklch(0.44 0 0);
+  --background: #27463d;
+  --foreground: #f7f3df;
+  --card: #35574d;
+  --card-foreground: #f7f3df;
+  --popover: #3c6157;
+  --popover-foreground: #f7f3df;
+  --primary: #82d5bb;
+  --primary-foreground: #244238;
+  --secondary: #40675c;
+  --secondary-foreground: #f7f3df;
+  --muted: #3a5a51;
+  --muted-foreground: #dfd0b2;
+  --accent: #5b7a55;
+  --accent-foreground: #fff9e3;
+  --destructive: #fc736d;
+  --destructive-foreground: #fff9e3;
+  --success: #8ac68a;
+  --success-foreground: #173223;
+  --warning: #f7cd67;
+  --warning-foreground: #3d2e1e;
+  --info: #889df0;
+  --info-foreground: #fff9e3;
+  --neutral: #bcae94;
+  --neutral-foreground: #fff9e3;
+  --border: rgb(255 249 227 / 14%);
+  --input: rgb(255 249 227 / 18%);
+  --ring: #ffcc00;
+  --chart-1: #82d5bb;
+  --chart-2: #889df0;
+  --chart-3: #f8a6b2;
+  --chart-4: #f7cd67;
+  --chart-5: #d1da49;
+  --sidebar: #234137;
+  --sidebar-foreground: #f7f3df;
+  --sidebar-primary: #82d5bb;
+  --sidebar-primary-foreground: #244238;
+  --sidebar-accent: #35574d;
+  --sidebar-accent-foreground: #f7f3df;
+  --sidebar-border: rgb(255 249 227 / 12%);
+  --sidebar-ring: #ffcc00;
+  --skeleton-base: #466b61;
+  --skeleton-highlight: #62857a;
   --table-row: var(--background);
   --table-header: color-mix(
     in oklch,
