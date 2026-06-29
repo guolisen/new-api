@@ -57,6 +57,7 @@ const _systemInfoSchema = z.object({
   }),
   SystemName: z.string().min(1),
   ServerAddress: z.string().optional(),
+  PublicApiOrigin: z.string().optional(),
   Logo: z.string().url().optional().or(z.literal('')),
   Footer: z.string().optional(),
   About: z.string().optional(),
@@ -88,8 +89,9 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
         defaultValues.theme?.frontend === 'classic' ? 'classic' : 'default',
     },
     SystemName: normalizeValue(defaultValues.SystemName),
-    ServerAddress: normalizeValue(defaultValues.ServerAddress),
-    Logo: normalizeValue(defaultValues.Logo),
+  ServerAddress: normalizeValue(defaultValues.ServerAddress),
+  PublicApiOrigin: normalizeValue(defaultValues.PublicApiOrigin),
+  Logo: normalizeValue(defaultValues.Logo),
     Footer: normalizeValue(defaultValues.Footer),
     About: normalizeValue(defaultValues.About),
     HomePageContent: normalizeValue(defaultValues.HomePageContent),
@@ -107,6 +109,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
       error: () => t('System name is required'),
     }),
     ServerAddress: z.string().optional(),
+    PublicApiOrigin: z.string().optional(),
     Logo: z.string().url().optional().or(z.literal('')),
     Footer: z.string().optional(),
     About: z.string().optional(),
@@ -128,7 +131,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
       onSubmit: async (_data, changedFields) => {
         for (const [key, value] of Object.entries(changedFields)) {
           let v = normalizeValue(value)
-          if (key === 'ServerAddress') {
+          if (key === 'ServerAddress' || key === 'PublicApiOrigin') {
             v = v.replace(/\/+$/, '')
           }
           await updateOption.mutateAsync({
@@ -229,6 +232,28 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
                     <FormDescription>
                       {t(
                         'The public URL of your server, used for OAuth callbacks, webhooks, and other external integrations'
+                      )}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='PublicApiOrigin'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('Public API Origin')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='https://api.yourdomain.com'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t(
+                        'Used for homepage demos and ready-to-run API examples. Enter only the public API origin, without /v1.'
                       )}
                     </FormDescription>
                     <FormMessage />

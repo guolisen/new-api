@@ -43,8 +43,10 @@ import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { getUserModels } from '@/lib/api'
 import { MOTION_TRANSITION } from '@/lib/motion'
+import { buildPublicApiUrl } from '@/lib/public-api-url'
 import { ROLE } from '@/lib/roles'
 import { cn } from '@/lib/utils'
+import { useSystemConfig } from '@/hooks/use-system-config'
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
 import { Button } from '@/components/ui/button'
 import {
@@ -131,26 +133,6 @@ function saveSetupGuideExpanded(expanded: boolean): void {
     SETUP_GUIDE_VISIBILITY_STORAGE_KEY,
     expanded ? 'expanded' : 'collapsed'
   )
-}
-
-function getCurrentOrigin(): string {
-  if (typeof window === 'undefined') return ''
-  return window.location.origin
-}
-
-function normalizeEndpoint(sourceUrl?: string): string {
-  const fallback = `${getCurrentOrigin()}/v1/chat/completions`
-  const trimmed = sourceUrl?.trim()
-  if (!trimmed) return fallback
-
-  const withoutTrailingSlash = trimmed.replace(/\/+$/, '')
-  if (withoutTrailingSlash.endsWith('/v1/chat/completions')) {
-    return withoutTrailingSlash
-  }
-  if (withoutTrailingSlash.endsWith('/v1')) {
-    return `${withoutTrailingSlash}/chat/completions`
-  }
-  return `${withoutTrailingSlash}/v1/chat/completions`
 }
 
 function getPreferredKey(keys: ApiKey[]): ApiKey | null {
@@ -455,6 +437,7 @@ function CompactQuickAction(props: { action: QuickAction }) {
 export function OverviewDashboard() {
   const { t } = useTranslation()
   const user = useAuthStore((state) => state.auth.user)
+  const { publicApiOrigin } = useSystemConfig()
   const { items: apiInfoItems } = useApiInfo()
   const {
     apiInfo: showApiInfoPanel,
@@ -579,7 +562,10 @@ export function OverviewDashboard() {
   )
 
   const requestExample = useMemo<RequestExample>(() => {
-    const endpoint = normalizeEndpoint(apiInfoItems[0]?.url)
+    const endpoint = buildPublicApiUrl(
+      publicApiOrigin,
+      '/v1/chat/completions'
+    )
     const model = modelsQuery.data?.[0] ?? 'gpt-4o-mini'
     const keyName = preferredKey?.name ?? t('No API key yet')
     const ready = Boolean(preferredKey?.id && model)
@@ -594,7 +580,7 @@ export function OverviewDashboard() {
         : 'sk-...',
       ready,
     }
-  }, [apiInfoItems, modelsQuery.data, preferredKey, t])
+  }, [modelsQuery.data, preferredKey, publicApiOrigin, t])
 
   const completedStepCount = startSteps.filter((step) => step.completed).length
   const setupComplete = completedStepCount === startSteps.length

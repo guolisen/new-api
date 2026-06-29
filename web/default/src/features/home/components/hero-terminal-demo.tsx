@@ -17,6 +17,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 import { useState, useEffect, useRef, type ReactNode } from 'react'
+import { useSystemConfig } from '@/hooks/use-system-config'
+import { buildPublicApiUrl } from '@/lib/public-api-url'
 import { cn } from '@/lib/utils'
 
 type AccentTone = 'emerald' | 'amber' | 'blue' | 'violet'
@@ -168,6 +170,7 @@ interface HeroTerminalDemoProps {
 }
 
 export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
+  const { publicApiOrigin } = useSystemConfig()
   const [activeIndex, setActiveIndex] = useState(0)
   const [transitioning, setTransitioning] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined)
@@ -204,6 +207,7 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
 
   const demo = API_DEMOS[activeIndex]
   const accent = ACCENT_CLASSES[demo.accent]
+  const demoEndpoint = buildPublicApiUrl(publicApiOrigin, demo.endpoint)
 
   return (
     <div className={cn('mx-auto w-full max-w-2xl', props.className)}>
@@ -268,14 +272,18 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
               transitioning ? 'opacity-0' : 'opacity-100'
             )}
           >
-            {demo.endpoint}
+            {demoEndpoint}
           </code>
         </div>
 
         {/* Body — fixed rows so neither block shifts when switching demos */}
         <div className='grid h-[400px] grid-rows-[235px_minmax(0,1fr)] font-mono text-[12.5px] leading-[1.55]'>
           {/* Request */}
-          <RequestBlock demo={demo} transitioning={transitioning} />
+          <RequestBlock
+            demo={demo}
+            endpoint={demoEndpoint}
+            transitioning={transitioning}
+          />
 
           {/* Response */}
           <ResponseBlock demo={demo} transitioning={transitioning} />
@@ -315,8 +323,12 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
   )
 }
 
-function RequestBlock(props: { demo: ApiDemoConfig; transitioning: boolean }) {
-  const { demo, transitioning } = props
+function RequestBlock(props: {
+  demo: ApiDemoConfig
+  endpoint: string
+  transitioning: boolean
+}) {
+  const { demo, endpoint, transitioning } = props
 
   return (
     <div className='relative px-5 py-4'>
@@ -329,7 +341,7 @@ function RequestBlock(props: { demo: ApiDemoConfig; transitioning: boolean }) {
       >
         <CodeLine>
           <Command>curl</Command> <Flag>-X</Flag> <Flag>POST</Flag>{' '}
-          <StringText>&quot;{demo.endpoint}&quot;</StringText>{' '}
+          <StringText>&quot;{endpoint}&quot;</StringText>{' '}
           <Muted>{'\\'}</Muted>
         </CodeLine>
         {demo.headers.map((header) => (
