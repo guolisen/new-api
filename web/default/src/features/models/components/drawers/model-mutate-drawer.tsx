@@ -131,6 +131,10 @@ export function ModelMutateDrawer({
   const [advancedOpen, setAdvancedOpen] = useState(false)
   const [promptPrice, setPromptPrice] = useState('')
   const [completionPrice, setCompletionPrice] = useState('')
+  const [cachePrice, setCachePrice] = useState('')
+  const [imagePrice, setImagePrice] = useState('')
+  const [audioPrice, setAudioPrice] = useState('')
+  const [audioCompletionPrice, setAudioCompletionPrice] = useState('')
   const [oldModelName, setOldModelName] = useState<string>('')
 
   // Fetch vendors for dropdown
@@ -276,6 +280,166 @@ export function ModelMutateDrawer({
     }
   }
 
+  const handleCachePriceChange = (value: string) => {
+    setCachePrice(value)
+    if (
+      value &&
+      !Number.isNaN(Number.parseFloat(value)) &&
+      promptPrice &&
+      !Number.isNaN(Number.parseFloat(promptPrice)) &&
+      Number.parseFloat(promptPrice) > 0
+    ) {
+      const ratio = Number.parseFloat(value) / Number.parseFloat(promptPrice)
+      form.setValue('cacheRatio', ratio.toString())
+    } else {
+      form.setValue('cacheRatio', '')
+    }
+  }
+
+  const handleImagePriceChange = (value: string) => {
+    setImagePrice(value)
+    if (
+      value &&
+      !Number.isNaN(Number.parseFloat(value)) &&
+      promptPrice &&
+      !Number.isNaN(Number.parseFloat(promptPrice)) &&
+      Number.parseFloat(promptPrice) > 0
+    ) {
+      const ratio = Number.parseFloat(value) / Number.parseFloat(promptPrice)
+      form.setValue('imageRatio', ratio.toString())
+    } else {
+      form.setValue('imageRatio', '')
+    }
+  }
+
+  const handleAudioPriceChange = (value: string) => {
+    setAudioPrice(value)
+    if (
+      value &&
+      !Number.isNaN(Number.parseFloat(value)) &&
+      promptPrice &&
+      !Number.isNaN(Number.parseFloat(promptPrice)) &&
+      Number.parseFloat(promptPrice) > 0
+    ) {
+      const ratio = Number.parseFloat(value) / Number.parseFloat(promptPrice)
+      form.setValue('audioRatio', ratio.toString())
+    } else {
+      form.setValue('audioRatio', '')
+      form.setValue('audioCompletionRatio', '')
+      setAudioCompletionPrice('')
+    }
+  }
+
+  const handleAudioCompletionPriceChange = (value: string) => {
+    setAudioCompletionPrice(value)
+    if (
+      value &&
+      !Number.isNaN(Number.parseFloat(value)) &&
+      audioPrice &&
+      !Number.isNaN(Number.parseFloat(audioPrice)) &&
+      Number.parseFloat(audioPrice) > 0
+    ) {
+      const ratio = Number.parseFloat(value) / Number.parseFloat(audioPrice)
+      form.setValue('audioCompletionRatio', ratio.toString())
+    } else {
+      form.setValue('audioCompletionRatio', '')
+    }
+  }
+
+  const cacheRatioValue = form.watch('cacheRatio')
+  const imageRatioValue = form.watch('imageRatio')
+  const audioRatioValue = form.watch('audioRatio')
+  const audioCompletionRatioValue = form.watch('audioCompletionRatio')
+
+  useEffect(() => {
+    if (pricingSubMode !== 'price') return
+
+    if (
+      cacheRatioValue &&
+      !Number.isNaN(Number.parseFloat(cacheRatioValue)) &&
+      promptPrice &&
+      !Number.isNaN(Number.parseFloat(promptPrice))
+    ) {
+      setCachePrice(
+        (
+          Number.parseFloat(cacheRatioValue) * Number.parseFloat(promptPrice)
+        ).toString()
+      )
+      return
+    }
+
+    if (!cacheRatioValue) {
+      setCachePrice('')
+    }
+  }, [cacheRatioValue, pricingSubMode, promptPrice])
+
+  useEffect(() => {
+    if (pricingSubMode !== 'price') return
+
+    if (
+      imageRatioValue &&
+      !Number.isNaN(Number.parseFloat(imageRatioValue)) &&
+      promptPrice &&
+      !Number.isNaN(Number.parseFloat(promptPrice))
+    ) {
+      setImagePrice(
+        (
+          Number.parseFloat(imageRatioValue) * Number.parseFloat(promptPrice)
+        ).toString()
+      )
+      return
+    }
+
+    if (!imageRatioValue) {
+      setImagePrice('')
+    }
+  }, [imageRatioValue, pricingSubMode, promptPrice])
+
+  useEffect(() => {
+    if (pricingSubMode !== 'price') return
+
+    if (
+      audioRatioValue &&
+      !Number.isNaN(Number.parseFloat(audioRatioValue)) &&
+      promptPrice &&
+      !Number.isNaN(Number.parseFloat(promptPrice))
+    ) {
+      setAudioPrice(
+        (
+          Number.parseFloat(audioRatioValue) * Number.parseFloat(promptPrice)
+        ).toString()
+      )
+      return
+    }
+
+    if (!audioRatioValue) {
+      setAudioPrice('')
+    }
+  }, [audioRatioValue, pricingSubMode, promptPrice])
+
+  useEffect(() => {
+    if (pricingSubMode !== 'price') return
+
+    if (
+      audioCompletionRatioValue &&
+      !Number.isNaN(Number.parseFloat(audioCompletionRatioValue)) &&
+      audioPrice &&
+      !Number.isNaN(Number.parseFloat(audioPrice))
+    ) {
+      setAudioCompletionPrice(
+        (
+          Number.parseFloat(audioCompletionRatioValue) *
+          Number.parseFloat(audioPrice)
+        ).toString()
+      )
+      return
+    }
+
+    if (!audioCompletionRatioValue) {
+      setAudioCompletionPrice('')
+    }
+  }, [audioCompletionRatioValue, pricingSubMode, audioPrice])
+
   // Load model data for editing and ratio configuration
   useEffect(() => {
     if (open && isEditing && modelData?.data) {
@@ -356,6 +520,33 @@ export function ModelMutateDrawer({
           if (ratio !== undefined && ratio !== null) {
             const tokenPrice = ratio * 2
             setPromptPrice(tokenPrice.toString())
+            if (cacheRatio !== undefined && cacheRatio !== null) {
+              setCachePrice((tokenPrice * cacheRatio).toString())
+            } else {
+              setCachePrice('')
+            }
+            if (imageRatio !== undefined && imageRatio !== null) {
+              setImagePrice((tokenPrice * imageRatio).toString())
+            } else {
+              setImagePrice('')
+            }
+            if (audioRatio !== undefined && audioRatio !== null) {
+              const audioInputPrice = tokenPrice * audioRatio
+              setAudioPrice(audioInputPrice.toString())
+              if (
+                audioCompletionRatio !== undefined &&
+                audioCompletionRatio !== null
+              ) {
+                setAudioCompletionPrice(
+                  (audioInputPrice * audioCompletionRatio).toString()
+                )
+              } else {
+                setAudioCompletionPrice('')
+              }
+            } else {
+              setAudioPrice('')
+              setAudioCompletionPrice('')
+            }
             if (completionRatio !== undefined && completionRatio !== null) {
               const compPrice = tokenPrice * completionRatio
               setCompletionPrice(compPrice.toString())
@@ -387,6 +578,10 @@ export function ModelMutateDrawer({
       setPricingSubMode('ratio')
       setPromptPrice('')
       setCompletionPrice('')
+      setCachePrice('')
+      setImagePrice('')
+      setAudioPrice('')
+      setAudioCompletionPrice('')
       setAdvancedOpen(false)
       form.reset({
         model_name: currentRow?.model_name || '',
@@ -1130,28 +1325,54 @@ export function ModelMutateDrawer({
                         }`}
                       />
                     </CollapsibleTrigger>
-                    <CollapsibleContent className='flex flex-col gap-4 pt-4'>
+                  <CollapsibleContent className='flex flex-col gap-4 pt-4'>
                       <FormField
                         control={form.control}
                         name='cacheRatio'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t('Cache ratio')}</FormLabel>
+                            <FormLabel>
+                              {pricingSubMode === 'price'
+                                ? t('Cache price ($/1M tokens)')
+                                : t('Cache ratio')}
+                            </FormLabel>
                             <FormControl>
-                              <Input
-                                type='text'
-                                placeholder='0.1'
-                                {...field}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  if (validateNumber(value)) {
-                                    field.onChange(value)
-                                  }
-                                }}
-                              />
+                              {pricingSubMode === 'price' ? (
+                                <Input
+                                  type='text'
+                                  placeholder='0.2'
+                                  value={cachePrice}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      handleCachePriceChange(value)
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <Input
+                                  type='text'
+                                  placeholder='0.1'
+                                  {...field}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      field.onChange(value)
+                                    }
+                                  }}
+                                />
+                              )}
                             </FormControl>
                             <FormDescription>
-                              {t('Discount ratio for cache hits.')}
+                              {pricingSubMode === 'price'
+                                ? cachePrice &&
+                                  !Number.isNaN(Number.parseFloat(cachePrice)) &&
+                                  promptPrice &&
+                                  !Number.isNaN(Number.parseFloat(promptPrice)) &&
+                                  Number.parseFloat(promptPrice) > 0
+                                  ? `Calculated ratio: ${(Number.parseFloat(cachePrice) / Number.parseFloat(promptPrice)).toFixed(4)}`
+                                  : t('Enter Cache price to calculate ratio')
+                                : t('Discount ratio for cache hits.')}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1163,22 +1384,48 @@ export function ModelMutateDrawer({
                         name='imageRatio'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t('Image ratio')}</FormLabel>
+                            <FormLabel>
+                              {pricingSubMode === 'price'
+                                ? t('Image price ($/1M tokens)')
+                                : t('Image ratio')}
+                            </FormLabel>
                             <FormControl>
-                              <Input
-                                type='text'
-                                placeholder='1.0'
-                                {...field}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  if (validateNumber(value)) {
-                                    field.onChange(value)
-                                  }
-                                }}
-                              />
+                              {pricingSubMode === 'price' ? (
+                                <Input
+                                  type='text'
+                                  placeholder='2.5'
+                                  value={imagePrice}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      handleImagePriceChange(value)
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <Input
+                                  type='text'
+                                  placeholder='1.0'
+                                  {...field}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      field.onChange(value)
+                                    }
+                                  }}
+                                />
+                              )}
                             </FormControl>
                             <FormDescription>
-                              {t('Multiplier for image processing.')}
+                              {pricingSubMode === 'price'
+                                ? imagePrice &&
+                                  !Number.isNaN(Number.parseFloat(imagePrice)) &&
+                                  promptPrice &&
+                                  !Number.isNaN(Number.parseFloat(promptPrice)) &&
+                                  Number.parseFloat(promptPrice) > 0
+                                  ? `Calculated ratio: ${(Number.parseFloat(imagePrice) / Number.parseFloat(promptPrice)).toFixed(4)}`
+                                  : t('Enter Image price to calculate ratio')
+                                : t('Multiplier for image processing.')}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1190,22 +1437,48 @@ export function ModelMutateDrawer({
                         name='audioRatio'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t('Audio ratio')}</FormLabel>
+                            <FormLabel>
+                              {pricingSubMode === 'price'
+                                ? t('Audio input price ($/1M tokens)')
+                                : t('Audio ratio')}
+                            </FormLabel>
                             <FormControl>
-                              <Input
-                                type='text'
-                                placeholder='1.0'
-                                {...field}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  if (validateNumber(value)) {
-                                    field.onChange(value)
-                                  }
-                                }}
-                              />
+                              {pricingSubMode === 'price' ? (
+                                <Input
+                                  type='text'
+                                  placeholder='3.81'
+                                  value={audioPrice}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      handleAudioPriceChange(value)
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <Input
+                                  type='text'
+                                  placeholder='1.0'
+                                  {...field}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      field.onChange(value)
+                                    }
+                                  }}
+                                />
+                              )}
                             </FormControl>
                             <FormDescription>
-                              {t('Multiplier for audio inputs.')}
+                              {pricingSubMode === 'price'
+                                ? audioPrice &&
+                                  !Number.isNaN(Number.parseFloat(audioPrice)) &&
+                                  promptPrice &&
+                                  !Number.isNaN(Number.parseFloat(promptPrice)) &&
+                                  Number.parseFloat(promptPrice) > 0
+                                  ? `Calculated ratio: ${(Number.parseFloat(audioPrice) / Number.parseFloat(promptPrice)).toFixed(4)}`
+                                  : t('Enter Audio input price to calculate ratio')
+                                : t('Multiplier for audio inputs.')}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1217,22 +1490,50 @@ export function ModelMutateDrawer({
                         name='audioCompletionRatio'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t('Audio completion ratio')}</FormLabel>
+                            <FormLabel>
+                              {pricingSubMode === 'price'
+                                ? t('Audio output price ($/1M tokens)')
+                                : t('Audio completion ratio')}
+                            </FormLabel>
                             <FormControl>
-                              <Input
-                                type='text'
-                                placeholder='1.0'
-                                {...field}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  if (validateNumber(value)) {
-                                    field.onChange(value)
-                                  }
-                                }}
-                              />
+                              {pricingSubMode === 'price' ? (
+                                <Input
+                                  type='text'
+                                  placeholder='15.11'
+                                  value={audioCompletionPrice}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      handleAudioCompletionPriceChange(value)
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <Input
+                                  type='text'
+                                  placeholder='1.0'
+                                  {...field}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    if (validateNumber(value)) {
+                                      field.onChange(value)
+                                    }
+                                  }}
+                                />
+                              )}
                             </FormControl>
                             <FormDescription>
-                              {t('Multiplier for audio outputs.')}
+                              {pricingSubMode === 'price'
+                                ? audioCompletionPrice &&
+                                  !Number.isNaN(
+                                    Number.parseFloat(audioCompletionPrice)
+                                  ) &&
+                                  audioPrice &&
+                                  !Number.isNaN(Number.parseFloat(audioPrice)) &&
+                                  Number.parseFloat(audioPrice) > 0
+                                  ? `Calculated ratio: ${(Number.parseFloat(audioCompletionPrice) / Number.parseFloat(audioPrice)).toFixed(4)}`
+                                  : t('Enter Audio output price to calculate ratio')
+                                : t('Multiplier for audio outputs.')}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
