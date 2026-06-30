@@ -45,6 +45,7 @@ func GetTopUpInfo(c *gin.Context) {
 			stripeMethod := map[string]string{
 				"name":      "Stripe",
 				"type":      "stripe",
+				"currency":  "USD",
 				"color":     "rgba(var(--semi-purple-5), 1)",
 				"min_topup": strconv.Itoa(setting.StripeMinTopUp),
 			}
@@ -67,6 +68,7 @@ func GetTopUpInfo(c *gin.Context) {
 			payMethods = append(payMethods, map[string]string{
 				"name":      "Waffo Pancake",
 				"type":      model.PaymentMethodWaffoPancake,
+				"currency":  "USD",
 				"color":     "rgba(var(--semi-orange-5), 1)",
 				"min_topup": strconv.Itoa(setting.WaffoPancakeMinTopUp),
 			})

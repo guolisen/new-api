@@ -194,8 +194,18 @@ export function getPaymentSettlementCurrency(
   const combined = `${type} ${name}`
 
   if (
+    type === PAYMENT_TYPES.STRIPE ||
+    type === PAYMENT_TYPES.CREEM ||
+    type === PAYMENT_TYPES.WAFFO_PANCAKE
+  ) {
+    return 'USD'
+  }
+
+  if (
     combined.includes('stripe') ||
     combined.includes('creem') ||
+    combined.includes('waffo_pancake') ||
+    combined.includes('pancake') ||
     combined.includes('paypal') ||
     combined.includes('card') ||
     combined.includes('visa') ||
