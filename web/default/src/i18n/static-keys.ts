@@ -26,6 +26,7 @@ export const STATIC_I18N_KEYS = [
   'Rankings',
   'Docs',
   'About',
+  'Forum',
 
   // Sidebar views (drill-in workspaces)
   'System Settings',
@@ -172,6 +173,10 @@ export const STATIC_I18N_KEYS = [
   'Team Collaboration',
   'Multi-user management with flexible permission allocation',
   'Technical Support',
+  'Contact Us',
+  'Need help or want to get in touch?',
+  'Use the contact details below to reach the team, ask questions, or request support.',
+  'Configured from System Settings',
   'Professional team providing 24/7 technical support',
 
   // User management (interpolated keys)

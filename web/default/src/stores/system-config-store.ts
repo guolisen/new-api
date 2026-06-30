@@ -41,6 +41,8 @@ export interface SystemConfig {
   systemName: string
   logo: string
   publicApiOrigin?: string
+  forumLink?: string
+  contactInfo?: string
   footerHtml?: string
   demoSiteEnabled?: boolean
   displayTokenStatEnabled?: boolean

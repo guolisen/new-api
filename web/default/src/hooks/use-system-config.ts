@@ -38,6 +38,8 @@ interface StatusApiResponse {
     system_name?: string
     logo?: string
     public_api_origin?: string
+    forum_link?: string
+    contact_info?: string
     footer_html?: string
     demo_site_enabled?: boolean
     display_token_stat_enabled?: boolean
@@ -96,6 +98,8 @@ export function mapStatusDataToConfig(
     systemName: data.system_name || DEFAULT_SYSTEM_NAME,
     logo: data.logo || DEFAULT_LOGO,
     publicApiOrigin: data.public_api_origin?.trim() || undefined,
+    forumLink: data.forum_link?.trim() || undefined,
+    contactInfo: data.contact_info || undefined,
     footerHtml: data.footer_html,
     demoSiteEnabled: data.demo_site_enabled,
     displayTokenStatEnabled: data.display_token_stat_enabled,

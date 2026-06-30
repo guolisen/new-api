@@ -116,6 +116,8 @@ export type SiteSettings = {
   HomePageContent: string
   ServerAddress: string
   PublicApiOrigin: string
+  ForumLink: string
+  ContactInfo: string
   'legal.user_agreement': string
   'legal.privacy_policy': string
   HeaderNavModules: string

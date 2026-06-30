@@ -56,6 +56,7 @@ export function useTopNavLinks(): TopNavLink[] {
 
   // Documentation link (may be external)
   const docsLink: string | undefined = status?.docs_link as string | undefined
+  const forumLink: string | undefined = status?.forum_link as string | undefined
 
   const isAuthed = !!auth?.user
 
@@ -97,6 +98,15 @@ export function useTopNavLinks(): TopNavLink[] {
   // About
   if (modules?.about !== false) {
     links.push({ title: t('About'), href: '/about' })
+  }
+
+  if (forumLink) {
+    links.push({
+      title: t('Forum'),
+      href: forumLink,
+      external: true,
+      target: '_blank',
+    })
   }
 
   return links

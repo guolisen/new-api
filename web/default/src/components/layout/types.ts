@@ -97,6 +97,7 @@ export type TopNavLink = {
   disabled?: boolean
   requiresAuth?: boolean
   external?: boolean
+  target?: '_blank' | '_self'
 }
 
 /**

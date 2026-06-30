@@ -58,6 +58,8 @@ const _systemInfoSchema = z.object({
   SystemName: z.string().min(1),
   ServerAddress: z.string().optional(),
   PublicApiOrigin: z.string().optional(),
+  ForumLink: z.string().optional(),
+  ContactInfo: z.string().optional(),
   Logo: z.string().url().optional().or(z.literal('')),
   Footer: z.string().optional(),
   About: z.string().optional(),
@@ -89,9 +91,11 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
         defaultValues.theme?.frontend === 'classic' ? 'classic' : 'default',
     },
     SystemName: normalizeValue(defaultValues.SystemName),
-  ServerAddress: normalizeValue(defaultValues.ServerAddress),
-  PublicApiOrigin: normalizeValue(defaultValues.PublicApiOrigin),
-  Logo: normalizeValue(defaultValues.Logo),
+    ServerAddress: normalizeValue(defaultValues.ServerAddress),
+    PublicApiOrigin: normalizeValue(defaultValues.PublicApiOrigin),
+    ForumLink: normalizeValue(defaultValues.ForumLink),
+    ContactInfo: normalizeValue(defaultValues.ContactInfo),
+    Logo: normalizeValue(defaultValues.Logo),
     Footer: normalizeValue(defaultValues.Footer),
     About: normalizeValue(defaultValues.About),
     HomePageContent: normalizeValue(defaultValues.HomePageContent),
@@ -110,6 +114,8 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
     }),
     ServerAddress: z.string().optional(),
     PublicApiOrigin: z.string().optional(),
+    ForumLink: z.string().optional(),
+    ContactInfo: z.string().optional(),
     Logo: z.string().url().optional().or(z.literal('')),
     Footer: z.string().optional(),
     About: z.string().optional(),
@@ -131,7 +137,11 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
       onSubmit: async (_data, changedFields) => {
         for (const [key, value] of Object.entries(changedFields)) {
           let v = normalizeValue(value)
-          if (key === 'ServerAddress' || key === 'PublicApiOrigin') {
+          if (
+            key === 'ServerAddress' ||
+            key === 'PublicApiOrigin' ||
+            key === 'ForumLink'
+          ) {
             v = v.replace(/\/+$/, '')
           }
           await updateOption.mutateAsync({
@@ -260,6 +270,52 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name='ForumLink'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('Forum Link')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder='https://forum.example.com' {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      {t(
+                        'Optional external forum or message board link shown in the top navigation.'
+                      )}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <SettingsFormGridItem span='full'>
+                <FormField
+                  control={form.control}
+                  name='ContactInfo'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('Contact Info')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder={t(
+                            'Email: support@example.com\nTelegram: @yourhandle\nWeChat: your_wechat'
+                          )}
+                          rows={4}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        {t(
+                          'Shown on the home page below the main sections. Supports plain text or Markdown.'
+                        )}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </SettingsFormGridItem>
 
               <FormField
                 control={form.control}

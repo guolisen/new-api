@@ -2,6 +2,8 @@ package system_setting
 
 var ServerAddress = "http://localhost:3000"
 var PublicApiOrigin = ""
+var ForumLink = ""
+var ContactInfo = ""
 var WorkerUrl = ""
 var WorkerValidKey = ""
 var WorkerAllowHttpImageRequestEnabled = false

@@ -46,6 +46,8 @@ const SITE_SECTIONS = [
           HomePageContent: settings.HomePageContent,
           ServerAddress: settings.ServerAddress,
           PublicApiOrigin: settings.PublicApiOrigin,
+          ForumLink: settings.ForumLink,
+          ContactInfo: settings.ContactInfo,
           legal: {
             user_agreement: settings['legal.user_agreement'],
             privacy_policy: settings['legal.privacy_policy'],

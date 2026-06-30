@@ -18,15 +18,24 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
+import { useSystemConfig } from '@/hooks/use-system-config'
 import { Markdown } from '@/components/ui/markdown'
 import { PublicLayout } from '@/components/layout'
 import { Footer } from '@/components/layout/components/footer'
-import { CTA, Features, Hero, HowItWorks, Stats } from './components'
+import {
+  CTA,
+  ContactInfoSection,
+  Features,
+  Hero,
+  HowItWorks,
+  Stats,
+} from './components'
 import { useHomePageContent } from './hooks'
 
 export function Home() {
   const { t } = useTranslation()
   const { auth } = useAuthStore()
+  const { contactInfo } = useSystemConfig()
   const isAuthenticated = !!auth.user
   const { content, isLoaded, isUrl } = useHomePageContent()
 
@@ -67,6 +76,7 @@ export function Home() {
       <Features />
       <HowItWorks />
       <CTA isAuthenticated={isAuthenticated} />
+      <ContactInfoSection content={contactInfo} />
       <Footer />
     </PublicLayout>
   )

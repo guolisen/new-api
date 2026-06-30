@@ -106,6 +106,8 @@ export interface SystemStatus {
     wechat_login?: boolean
     wechat_qrcode?: string
     public_api_origin?: string
+    forum_link?: string
+    contact_info?: string
     wechat_qr_code?: string
     wechat_qrcode_image_url?: string
     wechat_qr_code_image_url?: string
@@ -150,6 +152,8 @@ export interface SystemStatus {
   wechat_login?: boolean
   wechat_qrcode?: string
   public_api_origin?: string
+  forum_link?: string
+  contact_info?: string
   wechat_qr_code?: string
   wechat_qrcode_image_url?: string
   wechat_qr_code_image_url?: string

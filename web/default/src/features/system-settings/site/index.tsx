@@ -34,6 +34,8 @@ const defaultSiteSettings: SiteSettings = {
   HomePageContent: '',
   ServerAddress: '',
   PublicApiOrigin: '',
+  ForumLink: '',
+  ContactInfo: '',
   'legal.user_agreement': '',
   'legal.privacy_policy': '',
   HeaderNavModules: '',
