@@ -94,6 +94,8 @@ export interface PaymentMethod {
   name: string
   /** Payment method type identifier */
   type: string
+  /** Optional settlement/display currency for actual payment */
+  currency?: string
   /** Legacy optional color for UI display */
   color?: string
   /** Minimum topup amount for this payment method */

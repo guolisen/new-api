@@ -18,7 +18,7 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { formatLocalCurrencyAmount } from '@/lib/currency'
+import { formatCurrencyFromUSD, getCurrencyLabel } from '@/lib/currency'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +31,11 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DEFAULT_DISCOUNT_RATE } from '../../constants'
-import { formatCurrency, getPaymentIcon } from '../../lib'
+import {
+  formatSettlementAmount,
+  getPaymentIcon,
+  getPaymentSettlementCurrency,
+} from '../../lib'
 import type { PaymentMethod } from '../../types'
 
 interface PaymentConfirmDialogProps {
@@ -63,6 +67,8 @@ export function PaymentConfirmDialog({
   const hasDiscount = discountRate > 0 && discountRate < 1 && paymentAmount > 0
   const originalAmount = hasDiscount ? paymentAmount / discountRate : 0
   const discountAmount = hasDiscount ? originalAmount - paymentAmount : 0
+  const balanceCurrencyLabel = getCurrencyLabel()
+  const settlementCurrency = getPaymentSettlementCurrency(paymentMethod)
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -79,10 +85,10 @@ export function PaymentConfirmDialog({
         <div className='space-y-3 py-3 sm:space-y-4 sm:py-4'>
           <div className='flex items-center justify-between'>
             <span className='text-muted-foreground text-sm'>
-              {t('Topup Amount')}
+              {t('Topup Amount')} ({balanceCurrencyLabel})
             </span>
             <span className='text-lg font-semibold'>
-              {formatLocalCurrencyAmount(topupAmount * usdExchangeRate, {
+              {formatCurrencyFromUSD(topupAmount, {
                 digitsLarge: 2,
                 digitsSmall: 2,
                 abbreviate: false,
@@ -92,22 +98,40 @@ export function PaymentConfirmDialog({
 
           <div className='flex items-center justify-between'>
             <span className='text-muted-foreground text-sm'>
-              {t('You Pay')}
+              {t('You Pay')} ({settlementCurrency})
             </span>
             {calculating ? (
               <Skeleton className='h-6 w-24' />
             ) : (
               <div className='flex items-baseline gap-2'>
                 <span className='text-2xl font-semibold'>
-                  {formatCurrency(paymentAmount)}
+                  {formatSettlementAmount(paymentAmount, settlementCurrency)}
                 </span>
                 {hasDiscount && (
                   <span className='text-muted-foreground text-sm line-through'>
-                    {formatCurrency(originalAmount)}
+                    {formatSettlementAmount(
+                      originalAmount,
+                      settlementCurrency
+                    )}
                   </span>
                 )}
               </div>
             )}
+          </div>
+
+          <div className='rounded-lg border border-dashed p-3'>
+            <div className='flex items-center justify-between text-sm'>
+              <span className='text-muted-foreground'>
+                {t('Target balance currency: {{currency}}', {
+                  currency: balanceCurrencyLabel,
+                })}
+              </span>
+              <span className='font-medium'>
+                {t('Payment currency: {{currency}}', {
+                  currency: settlementCurrency,
+                })}
+              </span>
+            </div>
           </div>
 
           {hasDiscount && !calculating && (
@@ -115,7 +139,7 @@ export function PaymentConfirmDialog({
               <div className='flex items-center justify-between text-sm'>
                 <span className='text-muted-foreground'>{t('You save')}</span>
                 <span className='font-semibold text-green-600'>
-                  {formatCurrency(discountAmount)}
+                  {formatSettlementAmount(discountAmount, settlementCurrency)}
                 </span>
               </div>
             </div>

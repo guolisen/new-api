@@ -62,6 +62,34 @@ export function formatCurrency(amount: number | string): string {
 }
 
 /**
+ * Format settlement amounts with an explicit currency code or symbol.
+ * Use this for actual payment amounts so users can clearly see what they pay.
+ */
+export function formatSettlementAmount(
+  amount: number | string,
+  currencyCode: string
+): string {
+  const numeric =
+    typeof amount === 'number' ? amount : Number.parseFloat(String(amount))
+  if (!Number.isFinite(numeric)) return '-'
+
+  const normalizedCode = currencyCode.trim().toUpperCase()
+  const fractionDigits = Math.abs(numeric) >= 1 ? 2 : 4
+
+  if (/^[A-Z]{3}$/.test(normalizedCode)) {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: normalizedCode,
+      currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: fractionDigits,
+    }).format(numeric)
+  }
+
+  return `${currencyCode} ${formatCurrency(numeric)}`
+}
+
+/**
  * Get discount label for display (e.g., "20% OFF")
  */
 export function getDiscountLabel(discount: number): string {

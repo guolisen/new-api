@@ -19,7 +19,7 @@ For commercial licensing, please contact support@quantumnous.com
 import { useState, useEffect } from 'react'
 import { Gift, ExternalLink, Loader2, Receipt, WalletCards } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { formatNumber } from '@/lib/format'
+import { formatCurrencyFromUSD } from '@/lib/currency'
 import { cn } from '@/lib/utils'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -35,11 +35,12 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import {
-  formatCurrency,
+  formatSettlementAmount,
   getDiscountLabel,
   getPaymentIcon,
   getMinTopupAmount,
   calculatePresetPricing,
+  getPaymentSettlementCurrency,
 } from '../lib'
 import type {
   PaymentMethod,
@@ -59,6 +60,7 @@ interface RechargeFormCardProps {
   onTopupAmountChange: (amount: number) => void
   paymentAmount: number
   calculating: boolean
+  selectedPaymentMethod?: PaymentMethod
   onPaymentMethodSelect: (method: PaymentMethod) => void
   paymentLoading: string | null
   redemptionCode: string
@@ -70,6 +72,7 @@ interface RechargeFormCardProps {
   priceRatio?: number
   usdExchangeRate?: number
   onOpenBilling?: () => void
+  balanceCurrencyLabel: string
   creemProducts?: CreemProduct[]
   enableCreemTopup?: boolean
   onCreemProductSelect?: (product: CreemProduct) => void
@@ -89,6 +92,7 @@ export function RechargeFormCard({
   onTopupAmountChange,
   paymentAmount,
   calculating,
+  selectedPaymentMethod,
   onPaymentMethodSelect,
   paymentLoading,
   redemptionCode,
@@ -100,6 +104,7 @@ export function RechargeFormCard({
   priceRatio = 1,
   usdExchangeRate = 1,
   onOpenBilling,
+  balanceCurrencyLabel,
   creemProducts,
   enableCreemTopup,
   onCreemProductSelect,
@@ -136,6 +141,17 @@ export function RechargeFormCard({
     Array.isArray(waffoPayMethods) && waffoPayMethods.length > 0
   const minTopup = getMinTopupAmount(topupInfo)
   const redemptionEnabled = topupInfo?.enable_redemption !== false
+  const settlementCurrency = getPaymentSettlementCurrency(
+    selectedPaymentMethod ?? topupInfo?.pay_methods?.[0]
+  )
+  const amountLabel = `${t('Amount')} (${balanceCurrencyLabel})`
+  const customAmountLabel = `${t('Custom Amount')} (${balanceCurrencyLabel})`
+  const targetCurrencyHint = t('Target balance currency: {{currency}}', {
+    currency: balanceCurrencyLabel,
+  })
+  const settlementCurrencyHint = t('Payment currency: {{currency}}', {
+    currency: settlementCurrency,
+  })
 
   if (loading) {
     return (
@@ -146,7 +162,6 @@ export function RechargeFormCard({
         </CardHeader>
         <CardContent className='space-y-4 p-3 sm:space-y-6 sm:p-5'>
           <div className='space-y-4 sm:space-y-6'>
-            {/* Preset Amounts Skeleton */}
             <div className='space-y-3'>
               <Skeleton className='h-3 w-16' />
               <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
@@ -156,13 +171,11 @@ export function RechargeFormCard({
               </div>
             </div>
 
-            {/* Custom Amount Input Skeleton */}
             <div className='space-y-3'>
               <Skeleton className='h-3 w-28' />
               <Skeleton className='h-[42px] w-full' />
             </div>
 
-            {/* Payment Methods Skeleton */}
             <div className='space-y-3'>
               <Skeleton className='h-3 w-32' />
               <div className='flex flex-wrap gap-3'>
@@ -173,7 +186,6 @@ export function RechargeFormCard({
             </div>
           </div>
 
-          {/* Redemption Code Section Skeleton */}
           <div className='space-y-3 border-t pt-8'>
             <Skeleton className='h-3 w-24' />
             <div className='flex gap-2'>
@@ -207,7 +219,6 @@ export function RechargeFormCard({
       }
       contentClassName='space-y-4 sm:space-y-6'
     >
-      {/* Online Topup Section */}
       {hasAnyTopup ? (
         <div className='space-y-4 sm:space-y-6'>
           {hasConfigurableTopup && (
@@ -215,7 +226,7 @@ export function RechargeFormCard({
               {presetAmounts.length > 0 && (
                 <div className='space-y-2.5 sm:space-y-3'>
                   <Label className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>
-                    {t('Amount')}
+                    {amountLabel}
                   </Label>
                   <div className='grid grid-cols-2 gap-1.5 sm:gap-3 md:grid-cols-4'>
                     {presetAmounts.map((preset, index) => {
@@ -223,17 +234,14 @@ export function RechargeFormCard({
                         preset.discount ||
                         topupInfo?.discount?.[preset.value] ||
                         1.0
-                      const {
-                        displayValue,
-                        actualPrice,
-                        savedAmount,
-                        hasDiscount,
-                      } = calculatePresetPricing(
-                        preset.value,
-                        priceRatio,
-                        discount,
-                        usdExchangeRate
-                      )
+                      const { actualPrice, savedAmount, hasDiscount } =
+                        calculatePresetPricing(
+                          preset.value,
+                          priceRatio,
+                          discount,
+                          usdExchangeRate
+                        )
+
                       return (
                         <Button
                           key={index}
@@ -248,7 +256,11 @@ export function RechargeFormCard({
                         >
                           <div className='flex w-full items-center justify-between'>
                             <div className='text-base font-semibold sm:text-lg'>
-                              {formatNumber(displayValue)}
+                              {formatCurrencyFromUSD(preset.value, {
+                                digitsLarge: 2,
+                                digitsSmall: 2,
+                                abbreviate: false,
+                              })}
                             </div>
                             {hasDiscount && (
                               <div className='text-xs font-medium text-green-600'>
@@ -257,11 +269,22 @@ export function RechargeFormCard({
                             )}
                           </div>
                           <div className='text-muted-foreground mt-1.5 w-full text-xs sm:mt-2'>
-                            Pay {formatCurrency(actualPrice)}
+                            {t('Pay {{amount}}', {
+                              amount: formatSettlementAmount(
+                                actualPrice,
+                                settlementCurrency
+                              ),
+                            })}
                             {hasDiscount && savedAmount > 0 && (
                               <span className='text-green-600'>
                                 {' '}
-                                • Save {formatCurrency(savedAmount)}
+                                •{' '}
+                                {t('Save {{amount}}', {
+                                  amount: formatSettlementAmount(
+                                    savedAmount,
+                                    settlementCurrency
+                                  ),
+                                })}
                               </span>
                             )}
                           </div>
@@ -277,7 +300,7 @@ export function RechargeFormCard({
                   htmlFor='topup-amount'
                   className='text-muted-foreground text-xs font-medium tracking-wider uppercase'
                 >
-                  {t('Custom Amount')}
+                  {customAmountLabel}
                 </Label>
                 <div className='grid grid-cols-[minmax(0,1fr)_minmax(110px,0.55fr)] gap-2 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center'>
                   <Input
@@ -291,16 +314,23 @@ export function RechargeFormCard({
                   />
                   <div className='bg-muted/30 flex min-h-9 items-center justify-between gap-2 rounded-md border px-3 lg:min-w-52'>
                     <span className='text-muted-foreground truncate text-xs'>
-                      {t('Amount to pay:')}
+                      {t('Amount to pay:')} {settlementCurrency}
                     </span>
                     {calculating ? (
                       <Skeleton className='h-5 w-16' />
                     ) : (
                       <span className='text-sm font-semibold'>
-                        {formatCurrency(paymentAmount)}
+                        {formatSettlementAmount(
+                          paymentAmount,
+                          settlementCurrency
+                        )}
                       </span>
                     )}
                   </div>
+                </div>
+                <div className='flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground'>
+                  <span>{targetCurrencyHint}</span>
+                  <span>{settlementCurrencyHint}</span>
                 </div>
               </div>
 
@@ -311,15 +341,15 @@ export function RechargeFormCard({
                 {hasStandardPaymentMethods ? (
                   <div className='grid grid-cols-2 gap-1.5 sm:gap-3 lg:grid-cols-3'>
                     {topupInfo?.pay_methods?.map((method) => {
-                      const minTopup = method.min_topup || 0
-                      const disabled = minTopup > topupAmount
+                      const methodMinTopup = method.min_topup || 0
+                      const disabled = methodMinTopup > topupAmount
                       const disabledReason = disabled
                         ? t('Minimum topup amount: {{amount}}', {
-                            amount: minTopup,
+                            amount: methodMinTopup,
                           })
                         : undefined
                       const disabledLabel = disabled
-                        ? `${t('Minimum:')} ${minTopup}`
+                        ? `${t('Minimum:')} ${methodMinTopup}`
                         : undefined
 
                       const button = (
@@ -468,7 +498,6 @@ export function RechargeFormCard({
         </Alert>
       )}
 
-      {/* Creem Products Section */}
       {enableCreemTopup &&
         Array.isArray(creemProducts) &&
         creemProducts.length > 0 &&
@@ -484,7 +513,6 @@ export function RechargeFormCard({
           </div>
         )}
 
-      {/* Redemption Code Section */}
       {redemptionEnabled ? (
         <div className='space-y-2.5 border-t pt-4 sm:space-y-3 sm:pt-6'>
           <div className='flex items-center gap-2'>
@@ -541,3 +569,4 @@ export function RechargeFormCard({
     </TitledCard>
   )
 }
+

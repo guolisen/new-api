@@ -22,7 +22,7 @@ import {
   DEFAULT_PAYMENT_TYPE,
   DEFAULT_MIN_TOPUP,
 } from '../constants'
-import type { PresetAmount, TopupInfo } from '../types'
+import type { PaymentMethod, PresetAmount, TopupInfo } from '../types'
 
 // ============================================================================
 // Payment Processing Functions
@@ -165,4 +165,61 @@ export function mergePresetAmounts(
     value: amount,
     discount: discounts[amount] || 1.0,
   }))
+}
+
+function normalizePaymentText(value: string | undefined): string {
+  return (value || '').trim().toLowerCase()
+}
+
+/**
+ * Infer settlement currency for the selected payment method.
+ *
+ * This keeps the current backend contract unchanged while making the UI
+ * explicit about whether the user is paying in USD, CNY, or another currency.
+ */
+export function getPaymentSettlementCurrency(
+  paymentMethod?: PaymentMethod | null
+): string {
+  if (!paymentMethod) {
+    return 'CNY'
+  }
+
+  const explicitCurrency = paymentMethod.currency?.trim()
+  if (explicitCurrency) {
+    return explicitCurrency.toUpperCase()
+  }
+
+  const type = normalizePaymentText(paymentMethod.type)
+  const name = normalizePaymentText(paymentMethod.name)
+  const combined = `${type} ${name}`
+
+  if (
+    combined.includes('stripe') ||
+    combined.includes('creem') ||
+    combined.includes('paypal') ||
+    combined.includes('card') ||
+    combined.includes('visa') ||
+    combined.includes('mastercard')
+  ) {
+    return 'USD'
+  }
+
+  if (
+    combined.includes('alipay') ||
+    combined.includes('wxpay') ||
+    combined.includes('wechat') ||
+    combined.includes('epay')
+  ) {
+    return 'CNY'
+  }
+
+  if (combined.includes('eur')) {
+    return 'EUR'
+  }
+
+  if (combined.includes('hkd')) {
+    return 'HKD'
+  }
+
+  return 'CNY'
 }
