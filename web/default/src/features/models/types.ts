@@ -46,6 +46,11 @@ export interface Model {
   created_time: number
   updated_time: number
   name_rule: number
+  quota_type?: number
+  model_ratio?: number
+  model_price?: number
+  completion_ratio?: number
+  cache_ratio?: number | null
   // Runtime fields
   bound_channels?: BoundChannel[]
   enable_groups?: string[]

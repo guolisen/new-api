@@ -38,6 +38,7 @@ import {
   getQuotaTypeConfig,
 } from '../constants'
 import { parseModelTags, formatEndpointsDisplay } from '../lib'
+import { formatPricingNumber } from '../../system-settings/models/pricing-format'
 import type { Model, Vendor } from '../types'
 import { DataTableRowActions } from './data-table-row-actions'
 import { DescriptionCell } from './description-cell'
@@ -46,6 +47,47 @@ function getCompactModelIcon(iconKey: string) {
   const baseIconKey = iconKey.split('.')[0]
 
   return getLobeIcon(`${baseIconKey}.Avatar.type={'platform'}`, 20)
+}
+
+function formatUsdAmount(value: number | null | undefined, suffix = '') {
+  if (value === null || value === undefined || !Number.isFinite(value)) {
+    return '-'
+  }
+
+  return `$${formatPricingNumber(value)}${suffix}`
+}
+
+function getModelPricingLines(model: Model) {
+  if (model.quota_type === 1) {
+    return {
+      input: formatUsdAmount(model.model_price, ' / req'),
+      output: '-',
+      cache: '-',
+    }
+  }
+
+  const inputPrice =
+    model.model_ratio !== undefined && model.model_ratio !== null
+      ? model.model_ratio * 2
+      : null
+  const outputPrice =
+    inputPrice !== null &&
+    model.completion_ratio !== undefined &&
+    model.completion_ratio !== null
+      ? inputPrice * model.completion_ratio
+      : null
+  const cachePrice =
+    inputPrice !== null &&
+    model.cache_ratio !== undefined &&
+    model.cache_ratio !== null
+      ? inputPrice * model.cache_ratio
+      : null
+
+  return {
+    input: formatUsdAmount(inputPrice, ' / 1M'),
+    output: formatUsdAmount(outputPrice, ' / 1M'),
+    cache: formatUsdAmount(cachePrice, ' / 1M'),
+  }
 }
 
 /**
@@ -235,6 +277,41 @@ export function useModelsColumns(vendors: Vendor[] = []): ColumnDef<Model>[] {
         return false
       },
       size: 120,
+      enableSorting: false,
+    },
+
+    // Pricing column
+    {
+      id: 'pricing',
+      header: t('Price'),
+      meta: { mobileHidden: true },
+      cell: ({ row }) => {
+        const pricing = getModelPricingLines(row.original)
+
+        return (
+          <div className='min-w-[180px] space-y-1 text-xs'>
+            <div className='flex items-center justify-between gap-3'>
+              <span className='text-muted-foreground'>{t('Input')}</span>
+              <span className='font-mono text-foreground tabular-nums'>
+                {pricing.input}
+              </span>
+            </div>
+            <div className='flex items-center justify-between gap-3'>
+              <span className='text-muted-foreground'>{t('Output')}</span>
+              <span className='font-mono text-foreground tabular-nums'>
+                {pricing.output}
+              </span>
+            </div>
+            <div className='flex items-center justify-between gap-3'>
+              <span className='text-muted-foreground'>{t('Cache')}</span>
+              <span className='font-mono text-foreground tabular-nums'>
+                {pricing.cache}
+              </span>
+            </div>
+          </div>
+        )
+      },
+      size: 220,
       enableSorting: false,
     },
 

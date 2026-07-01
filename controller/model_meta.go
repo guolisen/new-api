@@ -9,6 +9,7 @@ import (
 	"github.com/QuantumNous/new-api/common"
 	"github.com/QuantumNous/new-api/constant"
 	"github.com/QuantumNous/new-api/model"
+	"github.com/QuantumNous/new-api/setting/ratio_setting"
 
 	"github.com/gin-gonic/gin"
 )
@@ -161,7 +162,37 @@ func DeleteModelMeta(c *gin.Context) {
 }
 
 // enrichModels 批量填充附加信息：端点、渠道、分组、计费类型，避免 N+1 查询
+func enrichModelPricing(mm *model.Model) {
+	if mm == nil {
+		return
+	}
+
+	if modelPrice, ok := ratio_setting.GetModelPrice(mm.ModelName, false); ok {
+		mm.QuotaType = 1
+		mm.ModelPrice = modelPrice
+		mm.ModelRatio = 0
+		mm.CompletionRatio = 0
+		mm.CacheRatio = nil
+		return
+	}
+
+	modelRatio, _, _ := ratio_setting.GetModelRatio(mm.ModelName)
+	mm.QuotaType = 0
+	mm.ModelRatio = modelRatio
+	mm.CompletionRatio = ratio_setting.GetCompletionRatio(mm.ModelName)
+
+	if cacheRatio, ok := ratio_setting.GetCacheRatio(mm.ModelName); ok {
+		mm.CacheRatio = &cacheRatio
+	} else {
+		mm.CacheRatio = nil
+	}
+}
+
 func enrichModels(models []*model.Model) {
+	for _, mm := range models {
+		enrichModelPricing(mm)
+	}
+
 	if len(models) == 0 {
 		return
 	}
