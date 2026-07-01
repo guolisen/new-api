@@ -48,6 +48,8 @@ const SITE_SECTIONS = [
           PublicApiOrigin: settings.PublicApiOrigin,
           ForumLink: settings.ForumLink,
           ContactInfo: settings.ContactInfo,
+          SystemRealtimeMonitoringEnabled:
+            settings.SystemRealtimeMonitoringEnabled,
           legal: {
             user_agreement: settings['legal.user_agreement'],
             privacy_policy: settings['legal.privacy_policy'],

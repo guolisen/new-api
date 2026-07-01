@@ -36,6 +36,7 @@ const defaultSiteSettings: SiteSettings = {
   PublicApiOrigin: '',
   ForumLink: '',
   ContactInfo: '',
+  SystemRealtimeMonitoringEnabled: true,
   'legal.user_agreement': '',
   'legal.privacy_policy': '',
   HeaderNavModules: '',

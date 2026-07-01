@@ -210,6 +210,8 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 		}
 		c.Request.Body = io.NopCloser(bodyStorage)
 
+		monitorRequestID := service.StartRelayMonitorRequest(c, relayInfo, channel, retryParam.GetRetry()+1)
+
 		switch relayFormat {
 		case types.RelayFormatOpenAIRealtime:
 			newAPIError = relay.WssHelper(c, relayInfo)
@@ -222,10 +224,12 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 		}
 
 		if newAPIError == nil {
+			service.FinishRelayMonitorRequest(monitorRequestID, true)
 			relayInfo.LastError = nil
 			return
 		}
 
+		service.FinishRelayMonitorRequest(monitorRequestID, false)
 		newAPIError = service.NormalizeViolationFeeError(newAPIError)
 		relayInfo.LastError = newAPIError
 

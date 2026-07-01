@@ -300,6 +300,7 @@ func calculateTextQuotaSummary(ctx *gin.Context, relayInfo *relaycommon.RelayInf
 		summary.Quota = int(quotaCalculateDecimal.Round(0).IntPart())
 	}
 
+	UpdateRelayMonitorUsageByContext(ctx, summary.PromptTokens, summary.CompletionTokens, summary.TotalTokens, summary.Quota)
 	if summary.TotalTokens == 0 {
 		summary.Quota = 0
 	} else if !ratio.IsZero() && summary.Quota == 0 {

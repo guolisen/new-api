@@ -118,6 +118,7 @@ export type SiteSettings = {
   PublicApiOrigin: string
   ForumLink: string
   ContactInfo: string
+  SystemRealtimeMonitoringEnabled: boolean
   'legal.user_agreement': string
   'legal.privacy_policy': string
   HeaderNavModules: string

@@ -322,10 +322,12 @@ func SetApiRouter(router *gin.Engine) {
 			systemTaskRoute.GET("/current", controller.GetCurrentSystemTask)
 			systemTaskRoute.GET("/:task_id", controller.GetSystemTask)
 		}
+		apiRouter.POST("/system-info/presence/heartbeat", middleware.UserAuth(), controller.HeartbeatSystemPresence)
 		systemInfoRoute := apiRouter.Group("/system-info")
 		systemInfoRoute.Use(middleware.RootAuth())
 		{
 			systemInfoRoute.GET("/instances", controller.ListSystemInstances)
+			systemInfoRoute.GET("/realtime", controller.GetSystemRealtime)
 		}
 
 		dataRoute := apiRouter.Group("/data")

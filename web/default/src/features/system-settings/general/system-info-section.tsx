@@ -38,6 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { FormDirtyIndicator } from '../components/form-dirty-indicator'
 import { FormNavigationGuard } from '../components/form-navigation-guard'
@@ -60,6 +61,7 @@ const _systemInfoSchema = z.object({
   PublicApiOrigin: z.string().optional(),
   ForumLink: z.string().optional(),
   ContactInfo: z.string().optional(),
+  SystemRealtimeMonitoringEnabled: z.boolean(),
   Logo: z.string().url().optional().or(z.literal('')),
   Footer: z.string().optional(),
   About: z.string().optional(),
@@ -95,6 +97,8 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
     PublicApiOrigin: normalizeValue(defaultValues.PublicApiOrigin),
     ForumLink: normalizeValue(defaultValues.ForumLink),
     ContactInfo: normalizeValue(defaultValues.ContactInfo),
+    SystemRealtimeMonitoringEnabled:
+      defaultValues.SystemRealtimeMonitoringEnabled !== false,
     Logo: normalizeValue(defaultValues.Logo),
     Footer: normalizeValue(defaultValues.Footer),
     About: normalizeValue(defaultValues.About),
@@ -116,6 +120,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
     PublicApiOrigin: z.string().optional(),
     ForumLink: z.string().optional(),
     ContactInfo: z.string().optional(),
+    SystemRealtimeMonitoringEnabled: z.boolean(),
     Logo: z.string().url().optional().or(z.literal('')),
     Footer: z.string().optional(),
     About: z.string().optional(),
@@ -316,6 +321,33 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
                   )}
                 />
               </SettingsFormGridItem>
+
+              <FormField
+                control={form.control}
+                name='SystemRealtimeMonitoringEnabled'
+                render={({ field }) => (
+                  <FormItem className='rounded-xl border p-4'>
+                    <div className='flex items-start justify-between gap-4'>
+                      <div className='space-y-1'>
+                        <FormLabel>{t('Realtime System Monitoring')}</FormLabel>
+                        <FormDescription>
+                          {t(
+                            'Enable live user presence, request sampling, and channel activity charts on the System Info page.'
+                          )}
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          aria-label={t('Realtime System Monitoring')}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}

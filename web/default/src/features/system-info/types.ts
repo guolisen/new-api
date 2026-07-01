@@ -77,3 +77,104 @@ export type SystemInstanceListResponse = {
   message: string
   data?: SystemInstance[]
 }
+
+export type SystemRealtimePresenceUser = {
+  user_id: number
+  username: string
+  role: number
+  role_name: string
+  group: string
+  current_path: string
+  client_ip: string
+  last_seen_at: number
+}
+
+export type SystemRealtimePresenceSnapshot = {
+  online_count: number
+  stale_after_seconds: number
+  users: SystemRealtimePresenceUser[]
+}
+
+export type SystemRealtimeSummary = {
+  online_users: number
+  active_requests: number
+  active_http_connections: number
+  recent_request_count: number
+  success_count: number
+  error_count: number
+  success_rate: number
+  avg_latency_ms: number
+  prompt_tokens: number
+  completion_tokens: number
+  total_tokens: number
+  quota: number
+  rpm_1m: number
+  tpm_1m: number
+}
+
+export type SystemRealtimeActiveRequest = {
+  monitor_id: string
+  request_id: string
+  user_id: number
+  username: string
+  token_id: number
+  channel_id: number
+  channel_name: string
+  model_name: string
+  group: string
+  request_path: string
+  client_ip: string
+  started_at: number
+  duration_seconds: number
+  is_stream: boolean
+  attempt: number
+  prompt_tokens: number
+  completion_tokens: number
+  total_tokens: number
+  quota: number
+}
+
+export type SystemRealtimeChannelPoint = {
+  bucket_at: number
+  request_count: number
+  success_count: number
+  error_count: number
+  avg_latency_ms: number
+  prompt_tokens: number
+  completion_tokens: number
+  total_tokens: number
+  quota: number
+}
+
+export type SystemRealtimeChannelSnapshot = {
+  channel_id: number
+  channel_name: string
+  active_requests: number
+  recent_request_count: number
+  success_count: number
+  error_count: number
+  success_rate: number
+  avg_latency_ms: number
+  prompt_tokens: number
+  completion_tokens: number
+  total_tokens: number
+  quota: number
+  rpm_1m: number
+  tpm_1m: number
+  series: SystemRealtimeChannelPoint[]
+}
+
+export type SystemRealtimeSnapshot = {
+  generated_at: number
+  window_seconds: number
+  presence: SystemRealtimePresenceSnapshot
+  summary: SystemRealtimeSummary
+  active_requests: SystemRealtimeActiveRequest[]
+  channels: SystemRealtimeChannelSnapshot[]
+}
+
+export type SystemRealtimeResponse = {
+  success: boolean
+  message: string
+  data?: SystemRealtimeSnapshot
+}

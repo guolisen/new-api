@@ -76,6 +76,7 @@ func InitOptionMap() {
 	common.OptionMap["PublicApiOrigin"] = ""
 	common.OptionMap["ForumLink"] = ""
 	common.OptionMap["ContactInfo"] = ""
+	common.OptionMap["SystemRealtimeMonitoringEnabled"] = "true"
 	common.OptionMap["WorkerUrl"] = system_setting.WorkerUrl
 	common.OptionMap["WorkerValidKey"] = system_setting.WorkerValidKey
 	common.OptionMap["WorkerAllowHttpImageRequestEnabled"] = strconv.FormatBool(system_setting.WorkerAllowHttpImageRequestEnabled)

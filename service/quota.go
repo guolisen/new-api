@@ -214,6 +214,7 @@ func PostWssConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, mod
 	}
 
 	// record all the consume log even if quota is 0
+	UpdateRelayMonitorUsageByContext(ctx, usage.InputTokens, usage.OutputTokens, totalTokens, quota)
 	if totalTokens == 0 {
 		// in this case, must be some error happened
 		// we cannot just return, because we may have to return the pre-consumed quota
@@ -335,6 +336,7 @@ func PostAudioConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, u
 	}
 
 	// record all the consume log even if quota is 0
+	UpdateRelayMonitorUsageByContext(ctx, usage.PromptTokens, usage.CompletionTokens, totalTokens, quota)
 	if totalTokens == 0 {
 		// in this case, must be some error happened
 		// we cannot just return, because we may have to return the pre-consumed quota

@@ -25,6 +25,7 @@ import { AnimatedOutlet } from '@/components/page-transition'
 import { SkipToMain } from '@/components/skip-to-main'
 import { AppHeader } from './app-header'
 import { AppSidebar } from './app-sidebar'
+import { SystemPresenceHeartbeat } from './system-presence-heartbeat'
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode
@@ -37,6 +38,7 @@ export function AuthenticatedLayout(props: AuthenticatedLayoutProps) {
     <LayoutProvider>
       <SearchProvider>
         <SidebarProvider defaultOpen={defaultOpen} className='flex-col'>
+          <SystemPresenceHeartbeat />
           <SkipToMain />
           <AppHeader />
           <div className='flex min-h-0 w-full flex-1'>

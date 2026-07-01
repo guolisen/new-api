@@ -16,7 +16,7 @@ version: '3.4' # For compatibility with older Docker versions
 
 services:
   new-api:
-    image: guolisen/ai-paths:2026-06-26-11
+    image: guolisen/ai-paths:2026-06-26-14
     container_name: new-api
     restart: always
     command: --log-dir /app/logs
